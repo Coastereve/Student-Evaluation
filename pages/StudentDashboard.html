@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Evaluation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-300 font-sans overflow-hidden">
+
+<!-- HEADER -->
+<div class="bg-[#4f46e5] text-white flex justify-between items-center px-8 py-4 shadow-lg">
+    <h1 class="text-xl font-bold uppercase">Quezon City University</h1>
+    <button id="logoutBtn" class="bg-red-500 px-5 py-2 rounded-xl shadow hover:bg-red-600">
+        Log Out
+    </button>
+</div>
+
+<!-- MAIN -->
+<div class="p-6 grid grid-cols-1 md:grid-cols-[320px_1fr] gap-6 h-[calc(100vh-80px)] overflow-hidden">
+
+    <!-- LEFT PANEL -->
+    <div class="flex flex-col gap-6 h-full min-h-0">
+
+        <!-- STUDENT INFO -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-14 h-14 bg-gray-200 rounded-full"></div>
+                <h2 id="studentDisplay" class="text-xl font-bold">24 - XXXX</h2>
+            </div>
+
+            <p class="text-gray-700">Class Code: 24 - XXXX</p>
+            <p class="text-gray-700">Number of Professor: 5</p>
+            <p class="text-green-600 font-semibold">Status: Regular</p>
+        </div>
+
+        <!-- PROFESSOR LIST -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col flex-1 min-h-0">
+            <h2 class="text-lg font-semibold mb-4">List of Professors:</h2>
+
+            <!-- ONLY THIS SCROLLS -->
+            <div class="flex flex-col gap-3 overflow-y-auto flex-1 pr-2">
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Nicky Balew</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Awee Balew</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Redenton Balew</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Professor 4</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Professor 5</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Professor 7</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Professor 8</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Professor 9</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Professor 10</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Professor 11</button>
+                <button class="prof-btn bg-gray-200 py-2 rounded-xl shadow hover:bg-gray-300">Professor 12</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="bg-white rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+
+        <!-- HEADER -->
+        <div class="bg-[#4f46e5] text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-2xl font-bold">Student Evaluation</h2>
+            <span id="dateTime"></span>
+        </div>
+
+        <!-- CONTENT (SCROLLABLE ONLY HERE) -->
+        <div class="p-6 flex-1 overflow-y-auto">
+            <h3 class="text-xl font-semibold mb-4 text-center">Instructions:</h3>
+
+            <ol class="list-decimal ml-6 space-y-4 text-gray-700 leading-relaxed">
+                <li>Lorem ipsum dolor sit amet...</li>
+                <li>Lorem ipsum dolor sit amet...</li>
+                <li>Lorem ipsum dolor sit amet...</li>
+                <li>Lorem ipsum dolor sit amet...</li>
+            </ol>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="p-6 flex justify-end">
+            <button class="bg-[#4f46e5] text-white px-6 py-2 rounded-xl shadow hover:bg-indigo-700">
+                Next
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- JS -->
+<script src="../scripts/SD.js"></script>
+
+</body>
+</html>
