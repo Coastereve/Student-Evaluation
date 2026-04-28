@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (studentBtn) {
         studentBtn.addEventListener('click', () => {
-            window.location.href = "StudentLogin.html";
+            window.location.href = "StudentDashboard.html";
         });
     }
 

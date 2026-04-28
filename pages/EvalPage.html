@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>QCU Student Evaluation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../styles/EvalPage.css">
+</head>
+<body class="bg-gray-300 font-sans">
+
+<!-- HEADER -->
+<div class="bg-[#4f46e5] text-white flex justify-between items-center px-8 py-4 shadow-lg">
+    <h1 class="text-xl font-bold uppercase">Quezon City University</h1>
+    <button id="logoutBtn" class="bg-red-500 px-5 py-2 rounded-xl shadow hover:bg-red-600">
+        Log Out
+    </button>
+</div>
+
+<div class="page-wrapper">
+    <!-- MAIN 2-COLUMN LAYOUT -->
+    <div class="grid grid-cols-1 md:grid-cols-[340px_1fr] gap-6">
+        
+        <!-- LEFT PANEL -->
+        <div class="flex flex-col gap-5">
+            <div class="bg-white rounded-2xl shadow-lg p-5">
+                <p class="text-sm text-gray-500 font-semibold mb-1">Student Number:</p>
+                <p id="studentDisplay" class="text-2xl font-bold text-gray-800 mb-3">24 - XXXX</p>
+                <p class="text-gray-700 text-sm mb-1"><span class="font-medium">Class Code:</span> 24 - XXXX</p>
+                <p class="text-gray-700 text-sm mb-1"><span class="font-medium">Number of Professor:</span> 5</p>
+                <p class="text-green-600 font-semibold text-sm mt-2">Status: Regular</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-indigo-500 currently-evaluating-card">
+                <div id="currentProfAvatar" class="prof-avatar-large bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg mb-4">NB</div>
+                <div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-1">Currently Evaluating</p>
+                    <p class="font-bold text-2xl text-gray-800" id="currentProfNameDisplay">Nicky Balew</p>
+                </div>
+                <p class="text-sm text-gray-600 mt-3" id="currentCourseDisplay">Course Code: IM101</p>
+                <p class="text-xs text-indigo-600 mt-1 break-all" id="currentEmailDisplay">nickybalew@gmail.com</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-lg p-4 flex-1 flex flex-col min-h-0">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">List of Professors</p>
+                <div class="prof-scroll-list" id="professorsListContainer"></div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden">
+            <!-- HEADER -->
+            <div class="bg-[#4f46e5] text-white px-8 py-5">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">Student Evaluation</h2>
+                    <div id="dateTimeDisplayHeader" class="text-sm bg-indigo-700 px-4 py-1.5 rounded-full font-medium">04/17/2026 10:00 AM</div>
+                </div>
+            </div>
+
+            <!-- SCROLLABLE CONTENT -->
+            <div class="flex-1 overflow-y-auto custom-scroll" id="mainContentArea">
+                <!-- PAGE 0: Teaching (Questions 1-2) -->
+                <div id="page0" class="page-content extended-padding page-transition">
+                    <div class="mb-4 flex justify-end">
+                        <span class="warning-badge" id="page0Warning">Answer both questions to mark page complete</span>
+                    </div>
+                    <div id="questionsPage0" class="space-y-8"></div>
+                    <div class="flex justify-between mt-10 pt-6 border-t border-gray-200">
+                        <button id="prevToPageNeg" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-xl font-semibold opacity-50 cursor-not-allowed" disabled>Back</button>
+                        <button id="nextToPage1" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl font-semibold">Next</button>
+                    </div>
+                </div>
+                
+                <!-- PAGE 1: Professionalism (Questions 3-5) -->
+                <div id="page1" class="page-content extended-padding page-transition hidden">
+                    <div class="mb-4 flex justify-end">
+                        <span class="warning-badge" id="page1Warning">Answer all 3 questions to mark page complete</span>
+                    </div>
+                    <div id="questionsPage1" class="space-y-8"></div>
+                    <div class="flex justify-between mt-10 pt-6 border-t border-gray-200">
+                        <button id="prevToPage0" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-xl font-semibold">Back</button>
+                        <button id="nextToPage2" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl font-semibold">Next</button>
+                    </div>
+                </div>
+                
+                <!-- PAGE 2: Attitude (Questions 6-7) -->
+                <div id="page2" class="page-content extended-padding page-transition hidden">
+                    <div class="mb-4 flex justify-end">
+                        <span class="warning-badge" id="page2Warning">Answer both questions to mark page complete</span>
+                    </div>
+                    <div id="questionsPage2" class="space-y-8"></div>
+                    <div class="flex justify-between mt-10 pt-6 border-t border-gray-200">
+                        <button id="prevToPage1" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-xl font-semibold">Back</button>
+                        <button id="nextToPage3" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl font-semibold">Next</button>
+                    </div>
+                </div>
+                
+                <!-- PAGE 3: Appearance & Submit (Questions 6-7) -->
+                <div id="page3" class="page-content extended-padding page-transition hidden">
+                    <div class="mb-4 flex justify-between items-center">
+                        <span class="warning-badge" id="page3Warning">Answer both questions to enable submission</span>
+                        <span id="submitEnableBadge" class="text-xs text-gray-500"></span>
+                    </div>
+                    <div id="questionsPage3" class="space-y-8"></div>
+                    <div class="flex justify-between mt-10 pt-6 border-t border-gray-200">
+                        <button id="prevToPage2" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-xl font-semibold">Back</button>
+                        <button id="submitEvalBtn" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>Submit & Continue</button>
+                    </div>
+                    <div id="submitMessage" class="mt-4 hidden text-center text-green-600 font-semibold"></div>
+                </div>
+            </div>
+
+            <!-- 4-PAGE PROGRESS BAR -->
+            <div class="bottom-progress-container">
+                <div class="flex items-center justify-between">
+                    <div class="tab-step" data-page="0" id="tabPage0">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Teaching</div>
+                    </div>
+                    <div class="progress-connector" id="connector0"></div>
+                    <div class="tab-step" data-page="1" id="tabPage1">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">Professionalism</div>
+                    </div>
+                    <div class="progress-connector" id="connector1"></div>
+                    <div class="tab-step" data-page="2" id="tabPage2">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Attitude</div>
+                    </div>
+                    <div class="progress-connector" id="connector2"></div>
+                    <div class="tab-step" data-page="3" id="tabPage3">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">Appearance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../scripts/EP.js"></script>
+</body>
+</html>
