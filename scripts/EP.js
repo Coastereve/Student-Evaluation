@@ -28,13 +28,33 @@ const professors = [
 ];
 
 const questions = [
+    // Teaching (Page 0)
     "The professor demonstrates thorough knowledge of the subject matter and explains concepts clearly.",
     "The professor uses effective teaching methods and engages students in learning.",
+    "The professor provides clear explanations and examples.",
+    "The professor encourages active participation in class.",
+    "The professor relates the subject matter to real-world applications.",
+    
+    // Professionalism (Page 1)
     "The professor is punctual, prepared, and organized for each class session.",
     "The professor treats students with respect and fairness at all times.",
+    "The professor follows the prescribed course syllabus.",
+    "The professor returns graded assignments and exams promptly.",
+    "The professor manages class time effectively.",
+    
+    // Attitude (Page 2)
     "The professor is approachable and responsive to student concerns and questions.",
     "The professor exhibits a positive and encouraging attitude toward student learning.",
-    "The professor maintains a professional appearance appropriate for an academic setting."
+    "The professor inspires students to do their best work.",
+    "The professor maintains a professional demeanor at all times.",
+    "The professor is open to feedback and suggestions from students.",
+
+    // Appearance (Page 3)
+    "The professor maintains a professional appearance appropriate for an academic setting.",
+    "The professor projects a confident and professional image.",
+    "The professor observes proper grooming and dress code.",
+    "The professor's appearance commands respect in the classroom.",
+    "The professor sets a good example through professional posture and poise."
 ];
 
 let evaluationsStore = {};
@@ -61,11 +81,10 @@ function setAnswer(questionIdx, rating) {
 
 function isPageComplete(pageNum) {
     const answers = getCurrentAnswers();
-    if (pageNum === 0) return answers[0] !== null && answers[1] !== null;
-    if (pageNum === 1) return answers[2] !== null && answers[3] !== null && answers[4] !== null;
-    if (pageNum === 2) return answers[5] !== null && answers[6] !== null;
-    if (pageNum === 3) return answers[5] !== null && answers[6] !== null;
-    return false;
+    const start = pageNum * 5;
+    const end = start + 5;
+    const pageAnswers = answers.slice(start, end);
+    return pageAnswers.length === 5 && pageAnswers.every(a => a !== null);
 }
 
 function isAllQuestionsComplete() {
@@ -82,42 +101,32 @@ function updateSubmitButtonState() {
             submitBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
             document.getElementById('submitEnableBadge').innerHTML = '<span class="text-green-600 text-xs font-semibold">All questions answered! Ready to submit.</span>';
             document.getElementById('page3Warning')?.classList.add('hidden');
+
         } else {
             submitBtn.disabled = true;
             const answeredCount = getCurrentAnswers().filter(a => a !== null).length;
-            document.getElementById('submitEnableBadge').innerHTML = `<span class="text-orange-500 text-xs">${answeredCount}/7 answered. Answer all questions to submit.</span>`;
+            document.getElementById('submitEnableBadge').innerHTML = `<span class="text-orange-500 text-xs">${answeredCount}/${questions.length} answered.</span>`;
         }
     }
 }
 
 function updatePageWarnings() {
-    const answers = getCurrentAnswers();
-    const page0Complete = answers[0] !== null && answers[1] !== null;
-    const page1Complete = answers[2] !== null && answers[3] !== null && answers[4] !== null;
-    const page2Complete = answers[5] !== null && answers[6] !== null;
-    const page3Complete = answers[7] !== null && answers[8] !== null;
-    
-    const p0w = document.getElementById('page0Warning');
-    const p1w = document.getElementById('page1Warning');
-    const p2w = document.getElementById('page2Warning');
-    const p3w = document.getElementById('page3Warning');
-    
-    const updateWarning = (warningEl, isComplete) => {
+    for (let i = 0; i <= 3; i++) {
+        const warningEl = document.getElementById(`page${i}Warning`);
         if (warningEl) {
-            if (isComplete) {
+            // Fix: toggle visibility based on current page
+            warningEl.classList.toggle('hidden', i !== currentPage);
+            if (isPageComplete(i)) {
                 warningEl.classList.remove('warning-badge');
-                warningEl.classList.add('bg-green-100', 'text-green-700');
+                warningEl.classList.add('bg-green-100', 'text-green-700', 'px-3', 'py-1', 'rounded-full');
+                warningEl.textContent = "Section Complete";
             } else {
                 warningEl.classList.add('warning-badge');
-                warningEl.classList.remove('bg-green-100', 'text-green-700');
+                warningEl.classList.remove('bg-green-100', 'text-green-700', 'px-3', 'py-1', 'rounded-full');
+                warningEl.textContent = "Please answer all 5 questions";
             }
         }
-    };
-    
-    updateWarning(p0w, page0Complete);
-    updateWarning(p1w, page1Complete);
-    updateWarning(p2w, page2Complete);
-    updateWarning(p3w, page3Complete);
+    }
 }
 
 function updateProgressBarColors() {
@@ -158,15 +167,15 @@ function renderCurrentPageQuestions() {
     const page2Container = document.getElementById('questionsPage2');
     const page3Container = document.getElementById('questionsPage3');
     
-    if (page0Container) page0Container.innerHTML = renderQuestionsForIndices([0, 1], answers);
-    if (page1Container) page1Container.innerHTML = renderQuestionsForIndices([2, 3, 4], answers);
-    if (page2Container) page2Container.innerHTML = renderQuestionsForIndices([5, 6], answers);
-    if (page3Container) page3Container.innerHTML = renderQuestionsForIndices([5, 6], answers);
+    if (page0Container) page0Container.innerHTML = renderQuestionsForIndices([0, 1, 2, 3, 4], answers);
+    if (page1Container) page1Container.innerHTML = renderQuestionsForIndices([5, 6, 7, 8, 9], answers);
+    if (page2Container) page2Container.innerHTML = renderQuestionsForIndices([10, 11, 12, 13, 14], answers);
+    if (page3Container) page3Container.innerHTML = renderQuestionsForIndices([15, 16, 17, 18, 19], answers);
     
     attachRatingEvents();
     updatePageWarnings();
     updateSubmitButtonState();
-}
+}   
 
 function renderQuestionsForIndices(indices, answers) {
     let html = '';
@@ -175,21 +184,23 @@ function renderQuestionsForIndices(indices, answers) {
         let ratingHtml = '';
         for (let rate = 1; rate <= 5; rate++) {
             const isSelected = (currentRating === rate);
-            const selectedClass = isSelected ? 'selected bg-indigo-600 text-white border-indigo-600' : 'bg-gray-100 text-gray-700 border-gray-200';
+            const selectedClass = isSelected ? 'selected bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200';
             ratingHtml += `
-                <label class="rating-option inline-flex items-center gap-2 px-5 py-2.5 rounded-full border cursor-pointer transition ${selectedClass}" data-qidx="${idx}" data-rate="${rate}">
+                <label class="rating-option inline-flex items-center justify-center w-10 h-10 rounded-full border cursor-pointer transition ${selectedClass}" data-qidx="${idx}" data-rate="${rate}">
                     <input type="radio" name="q${idx}" value="${rate}" ${isSelected ? 'checked' : ''} class="hidden">
-                    <span class="text-sm font-medium">${rate}</span>
+                    <span class="text-sm font-bold">${rate}</span>
                 </label>
             `;
         }
         html += `
-            <div class="question-card bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <p class="text-gray-800 leading-relaxed mb-5 text-base"><span class="font-bold mr-2">${idx+1}.</span> ${escapeHtml(questions[idx])}</p>
-                <div class="flex flex-wrap gap-3 items-center">
-                    <span class="text-xs text-gray-400 mr-2">Poor</span>
-                    ${ratingHtml}
-                    <span class="text-xs text-gray-400 ml-2">Excellent</span>
+            <div class="question-card bg-white rounded-xl p-6 border border-gray-200 flex justify-between items-center gap-4 shadow-sm">
+                <p class="text-gray-800 text-base flex-1"><span class="font-bold mr-2 text-indigo-600">${idx+1}.</span> ${escapeHtml(questions[idx])}</p>
+                <div class="flex items-center gap-3 shrink-0">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase">Poor</span>
+                    <div class="flex gap-2">
+                        ${ratingHtml}
+                    </div>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase">Excellent</span>
                 </div>
             </div>
         `;
@@ -214,21 +225,41 @@ function ratingClickHandler() {
         lbl.classList.add('bg-gray-100', 'text-gray-700', 'border-gray-200');
     });
     this.classList.add('selected', 'bg-indigo-600', 'text-white', 'border-indigo-600');
-    showToast(`Question ${qidx+1} rated ${rate}/5`);
 }
 
 function goToPage(pageNum) {
     if (pageNum < 0 || pageNum > 3) return;
-    document.querySelectorAll('[id^="page"]').forEach(page => page.classList.add('hidden'));
+    
+    // Hide all pages
+    document.querySelectorAll('.page-content').forEach(page => page.classList.add('hidden'));
+    // Show current page
     document.getElementById(`page${pageNum}`).classList.remove('hidden');
+    
     currentPage = pageNum;
+
+    // Show/Hide Next vs Submit buttons
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitEvalBtn');
+    const prevBtn = document.getElementById('prevBtn');
+
+    if (pageNum === 3) {
+        nextBtn.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+    } else {
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+    }
+
+    prevBtn.disabled = (pageNum === 0);
+
     updateProgressBarColors();
-    renderCurrentPageQuestions();
+    updatePageWarnings();
+    document.getElementById('mainContentArea').scrollTop = 0;
 }
 
 function submitAndContinue() {
     if (!isAllQuestionsComplete()) {
-        showToast("Cannot submit! Please answer all 7 questions first.");
+        showToast("Cannot submit! Please answer all questions first.");
         return;
     }
     
@@ -263,17 +294,16 @@ function submitAndContinue() {
         updateSubmitButtonState();
         renderProfessorsList();
         
-        showToast(`📚 Moving to next professor: ${currentProfessor.name}`);
+        showToast(`Moving to next professor: ${currentProfessor.name}`);
     } else {
-        const completeMsg = document.getElementById('submitMessage');
-        if (completeMsg) {
-            completeMsg.innerHTML = `Congratulations! All ${professors.length} professors have been evaluated.`;
-            completeMsg.classList.remove('hidden');
-        }
-        showToast("All professors evaluated.");
-        const submitBtn = document.getElementById('submitEvalBtn');
-        if (submitBtn) submitBtn.disabled = true;
-    }
+    // All professors evaluated: Redirect back to dashboard with a completion flag
+         showToast("All professors evaluated.");
+    
+    // We use setTimeout to let the user see the "Evaluation completed" toast for a second before leaving
+    setTimeout(() => {
+        window.location.href = "StudentDashboard.html?completed=true";
+    }, 1500);
+}
 }
 
 function updateProfessorAvatar(prof) {
@@ -287,7 +317,7 @@ function updateProfessorAvatar(prof) {
 
 function switchProfessor(prof, index) {
     if (prof.evaluated) {
-        showToast(`${prof.name} has already been evaluated. Cannot re-evaluate.`);
+        showToast(`${prof.name} has already been evaluated.`);
         return;
     }
     currentProfessorIndex = index;
@@ -326,14 +356,13 @@ function renderProfessorsList() {
             isActive ? 'bg-indigo-600 text-white shadow-md' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         } ${isEvaluated ? 'opacity-60' : ''}`;
         btn.innerHTML = `
-            <div class="prof-avatar-small bg-gradient-to-br ${colorData.bg} flex items-center justify-center text-white font-bold shadow-md">${colorData.initials}</div>
+            <div class="w-10 h-10 shrink-0 rounded-full bg-gradient-to-br ${colorData.bg} flex items-center justify-center text-white font-bold shadow-md">${colorData.initials}</div>
             <div class="flex-1 min-w-0">
                 <div class="flex justify-between items-center">
                     <span class="font-semibold text-sm">${prof.name}</span>
                     <span class="text-xs ${isActive ? 'text-indigo-200' : 'text-gray-500'}">${prof.course}</span>
                 </div>
-                <div class="text-xs ${isActive ? 'text-indigo-200' : 'text-gray-400'} truncate">${prof.email}</div>
-                ${isEvaluated ? '<span class="text-xs text-green-500 mt-1 inline-block">✓ Evaluated</span>' : ''}
+                ${isEvaluated ? '<span class="text-xs text-green-500 mt-1 inline-block">✓ Evaluated</span>' : `<div class="text-xs ${isActive ? 'text-indigo-200' : 'text-gray-400'} truncate">${prof.email}</div>`}
             </div>
         `;
         if (!isEvaluated) {
@@ -391,20 +420,17 @@ function init() {
     document.getElementById('currentEmailDisplay').innerText = currentProfessor.email;
     
     renderCurrentPageQuestions();
-    updateProgressBarColors();
-    updateSubmitButtonState();
     
-    document.getElementById('nextToPage1')?.addEventListener('click', () => goToPage(1));
-    document.getElementById('prevToPage0')?.addEventListener('click', () => goToPage(0));
-    document.getElementById('nextToPage2')?.addEventListener('click', () => goToPage(2));
-    document.getElementById('prevToPage1')?.addEventListener('click', () => goToPage(1));
-    document.getElementById('nextToPage3')?.addEventListener('click', () => goToPage(3));
-    document.getElementById('prevToPage2')?.addEventListener('click', () => goToPage(2));
+    // Fixed Navigation Event Listeners to match your HTML IDs
+    document.getElementById('nextBtn')?.addEventListener('click', () => goToPage(currentPage + 1));
+    document.getElementById('prevBtn')?.addEventListener('click', () => goToPage(currentPage - 1));
     document.getElementById('submitEvalBtn')?.addEventListener('click', submitAndContinue);
     
     for (let i = 0; i <= 3; i++) {
         document.getElementById(`tabPage${i}`)?.addEventListener('click', () => goToPage(i));
     }
+
+    goToPage(0);
 }
 
 init();
