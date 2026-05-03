@@ -92,62 +92,75 @@ function isAllQuestionsComplete() {
     return answers.every(a => a !== null);
 }
 
+function isRemarksComplete() {
+    const remarks = document.getElementById('remarksInput');
+    return remarks && remarks.value.trim().length > 0;
+}
+
 function updateSubmitButtonState() {
     const submitBtn = document.getElementById('submitEvalBtn');
-    const allComplete = isAllQuestionsComplete();
-    if (submitBtn) {
-        if (allComplete) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
-            document.getElementById('submitEnableBadge').innerHTML = '<span class="text-green-600 text-xs font-semibold">All questions answered! Ready to submit.</span>';
-            document.getElementById('page3Warning')?.classList.add('hidden');
+    const questionsDone = isAllQuestionsComplete();
+    const remarksDone = isRemarksComplete();
 
+    if (submitBtn) {
+        if (questionsDone && remarksDone) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            document.getElementById('submitEnableBadge').innerHTML = '<span class="text-green-600 text-xs font-semibold">Ready to submit!</span>';
         } else {
             submitBtn.disabled = true;
-            const answeredCount = getCurrentAnswers().filter(a => a !== null).length;
-            document.getElementById('submitEnableBadge').innerHTML = `<span class="text-orange-500 text-xs">${answeredCount}/${questions.length} answered.</span>`;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            if (!questionsDone) {
+                const answeredCount = getCurrentAnswers().filter(a => a !== null).length;
+                document.getElementById('submitEnableBadge').innerHTML = `<span class="text-orange-500 text-xs">${answeredCount}/${questions.length} answered.</span>`;
+            } else {
+                document.getElementById('submitEnableBadge').innerHTML = '<span class="text-orange-500 text-xs font-semibold">Please add your remarks.</span>';
+            }
         }
     }
 }
 
 function updatePageWarnings() {
-    for (let i = 0; i <= 3; i++) {
+    for (let i = 0; i <= 4; i++) {
         const warningEl = document.getElementById(`page${i}Warning`);
         if (warningEl) {
-            // Fix: toggle visibility based on current page
             warningEl.classList.toggle('hidden', i !== currentPage);
-            if (isPageComplete(i)) {
+            
+            const isComplete = (i === 4) ? isRemarksComplete() : isPageComplete(i);
+
+            if (isComplete) {
                 warningEl.classList.remove('warning-badge');
                 warningEl.classList.add('bg-green-100', 'text-green-700', 'px-3', 'py-1', 'rounded-full');
                 warningEl.textContent = "Section Complete";
             } else {
                 warningEl.classList.add('warning-badge');
                 warningEl.classList.remove('bg-green-100', 'text-green-700', 'px-3', 'py-1', 'rounded-full');
-                warningEl.textContent = "Please answer all 5 questions";
+                warningEl.textContent = (i === 4) ? "Please write your remarks" : "Please answer all 5 questions";
             }
         }
     }
 }
 
 function updateProgressBarColors() {
-    for (let i = 0; i <= 3; i++) {
+    for (let i = 0; i <= 4; i++) {
         const tab = document.getElementById(`tabPage${i}`);
         const connector = document.getElementById(`connector${i-1}`);
         if (tab) {
             tab.classList.remove('green', 'red', 'white');
             if (i === currentPage) {
                 tab.classList.add('white');
-            } else if (isPageComplete(i)) {
-                tab.classList.add('green');
             } else {
-                tab.classList.add('red');
+                const isComplete = (i === 4) ? isRemarksComplete() : isPageComplete(i);
+                tab.classList.add(isComplete ? 'green' : 'red');
             }
         }
         if (connector && i > 0) {
             connector.classList.remove('green', 'red', 'white');
             let allPrevComplete = true;
             for (let j = 0; j < i; j++) {
-                if (!isPageComplete(j)) allPrevComplete = false;
+                const prevStepDone = (j === 4) ? isRemarksComplete() : isPageComplete(j);
+                if (!prevStepDone) allPrevComplete = false;
             }
             if (allPrevComplete && currentPage >= i) {
                 connector.classList.add('green');
@@ -192,8 +205,9 @@ function renderQuestionsForIndices(indices, answers) {
                 </label>
             `;
         }
+
         html += `
-            <div class="question-card bg-white rounded-xl p-6 border border-gray-200 flex justify-between items-center gap-4 shadow-sm">
+            <div class="question-card bg-gray-50 rounded-xl p-6 border border-gray-200 flex justify-between items-center gap-4 shadow-sm">
                 <p class="text-gray-800 text-base flex-1"><span class="font-bold mr-2 text-indigo-600">${idx+1}.</span> ${escapeHtml(questions[idx])}</p>
                 <div class="flex items-center gap-3 shrink-0">
                     <span class="text-[10px] font-bold text-gray-400 uppercase">Poor</span>
@@ -202,10 +216,13 @@ function renderQuestionsForIndices(indices, answers) {
                     </div>
                     <span class="text-[10px] font-bold text-gray-400 uppercase">Excellent</span>
                 </div>
+
             </div>
         `;
     }
+
     return html;
+
 }
 
 function attachRatingEvents() {
@@ -228,21 +245,18 @@ function ratingClickHandler() {
 }
 
 function goToPage(pageNum) {
-    if (pageNum < 0 || pageNum > 3) return;
+    if (pageNum < 0 || pageNum > 4) return;
     
-    // Hide all pages
     document.querySelectorAll('.page-content').forEach(page => page.classList.add('hidden'));
-    // Show current page
     document.getElementById(`page${pageNum}`).classList.remove('hidden');
     
     currentPage = pageNum;
 
-    // Show/Hide Next vs Submit buttons
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitEvalBtn');
     const prevBtn = document.getElementById('prevBtn');
 
-    if (pageNum === 3) {
+    if (pageNum === 4) {
         nextBtn.classList.add('hidden');
         submitBtn.classList.remove('hidden');
     } else {
@@ -258,8 +272,8 @@ function goToPage(pageNum) {
 }
 
 function submitAndContinue() {
-    if (!isAllQuestionsComplete()) {
-        showToast("Cannot submit! Please answer all questions first.");
+    if (!isAllQuestionsComplete() || !isRemarksComplete()) {
+        showToast("Cannot submit! Please answer all questions and add remarks.");
         return;
     }
     
@@ -279,6 +293,7 @@ function submitAndContinue() {
         currentProfessor = professors[currentProfessorIndex];
         currentPage = 0;
         
+        document.getElementById('remarksInput').value = ""; 
         document.getElementById('currentProfNameDisplay').innerText = currentProfessor.name;
         document.getElementById('currentCourseDisplay').innerText = `Course Code: ${currentProfessor.course}`;
         document.getElementById('currentEmailDisplay').innerText = currentProfessor.email;
@@ -296,14 +311,11 @@ function submitAndContinue() {
         
         showToast(`Moving to next professor: ${currentProfessor.name}`);
     } else {
-    // All professors evaluated: Redirect back to dashboard with a completion flag
          showToast("All professors evaluated.");
-    
-    // We use setTimeout to let the user see the "Evaluation completed" toast for a second before leaving
-    setTimeout(() => {
-        window.location.href = "StudentDashboard.html?completed=true";
-    }, 1500);
-}
+         setTimeout(() => {
+            window.location.href = "StudentDashboard.html?completed=true";
+         }, 1500);
+    }
 }
 
 function updateProfessorAvatar(prof) {
@@ -415,18 +427,26 @@ function init() {
         evaluationsStore[currentProfessor.name] = { answers: new Array(questions.length).fill(null) };
     }
     
+    const remarksBox = document.getElementById('remarksInput');
+    if (remarksBox) {
+        remarksBox.addEventListener('input', () => {
+            updateSubmitButtonState();
+            updatePageWarnings();
+            updateProgressBarColors();
+        });
+    }
+
     document.getElementById('currentProfNameDisplay').innerText = currentProfessor.name;
     document.getElementById('currentCourseDisplay').innerText = `Course Code: ${currentProfessor.course}`;
     document.getElementById('currentEmailDisplay').innerText = currentProfessor.email;
     
     renderCurrentPageQuestions();
     
-    // Fixed Navigation Event Listeners to match your HTML IDs
     document.getElementById('nextBtn')?.addEventListener('click', () => goToPage(currentPage + 1));
     document.getElementById('prevBtn')?.addEventListener('click', () => goToPage(currentPage - 1));
     document.getElementById('submitEvalBtn')?.addEventListener('click', submitAndContinue);
     
-    for (let i = 0; i <= 3; i++) {
+    for (let i = 0; i <= 4; i++) {
         document.getElementById(`tabPage${i}`)?.addEventListener('click', () => goToPage(i));
     }
 

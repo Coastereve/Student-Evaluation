@@ -1,3 +1,4 @@
+<!-- i put new code here -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,16 +8,17 @@
     <link href="../styles/output.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-300 flex items-center justify-center min-h-screen font-sans">
+<body class="bg-gray-300 flex items-center justify-center min-h-screen font-sans p-6">
 
-    <div class="bg-white rounded-[2.5rem] shadow-2xl p-10 w-full max-w-md text-center mx-4 transition-all animate-in fade-in zoom-in duration-300">
+    <div class="bg-white rounded-[2rem] shadow-xl p-8 w-full max-w-[360px] text-center transition-all animate-in fade-in zoom-in duration-300">
         
-        <h1 class="text-4xl font-bold text-[#4f46e5] mb-8 tracking-tight">
+        <h1 class="text-3xl font-bold text-[#4f46e5] mb-6 tracking-tight uppercase">
             WELCOME
         </h1>
 
-        <div class="flex justify-center mb-8">
-            <div class="w-48 h-48 rounded-full bg-[#fdf2e9] overflow-hidden flex items-center justify-center">
+        <div class="flex justify-center mb-4">
+            <!-- i put new code here: Shrunk avatar container from w-48 to w-32 -->
+            <div class="w-32 h-32 rounded-full bg-[#fdf2e9] overflow-hidden flex items-center justify-center">
                 <img 
                     src="../images/avatar.png" 
                     alt="User Avatar icon" 
@@ -25,26 +27,26 @@
             </div>
         </div>
 
-        <p class="text-gray-600 text-lg font-medium mb-8">
+        <p class="text-gray-500 text-base font-medium mb-4">
             You’re logging in as
         </p>
 
-        <div class="flex flex-col gap-5">
-            
+        <div class="flex flex-col gap-3">
+            <!-- i put new code here: Reduced button padding and text size -->
             <button onclick="location.href='StudentLogin.html'" 
-                class="bg-[#4f46e5] hover:bg-[#3f38c2] text-white text-xl font-bold py-4 rounded-2xl shadow-lg transform active:scale-95 transition-all">
+                class="w-64 mx-auto bg-[#4f46e5] hover:bg-[#3f38c2] text-white text-15px font-bold py-2.5 rounded-xl shadow-md transform active:scale-95 transition-all">
                 Student
             </button>
 
             <button onclick="location.href='admin-dash.html'" 
-                class="bg-[#d1d5db] hover:bg-gray-300 text-[#6b7280] text-xl font-bold py-4 rounded-2xl transform active:scale-95 transition-all">
+                class="w-64 mx-auto bg-[#d1d5db] hover:bg-gray-300 text-[#6b7280] text-15px font-bold py-2.5 rounded-xl transform active:scale-95 transition-all">
                 Admin
             </button>
             
         </div>
 
         <button onclick="window.location.href='StartingPage.html'" 
-            class="mt-8 text-sm text-gray-400 hover:text-indigo-600 transition-colors">
+            class="mt-6 text-xs text-gray-400 hover:text-indigo-600 transition-colors">
             ← Go Back to Home
         </button>
     </div>

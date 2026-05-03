@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loginBtn.addEventListener('click', () => {
         const studentNo = studentInput.value.trim();
 
-        if (studentNo === "") {
+        if (studentNo === "" || !/^\d+$/.test(studentNo)) {
+            errorMsg.textContent = "Please enter a valid student number."; // i put new code here
             errorMsg.classList.remove('hidden');
             studentInput.classList.add('border-red-500');
             return;
@@ -14,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log("Logging in student:", studentNo);
 
-        // Save student number (optional but useful)
         localStorage.setItem("studentNo", studentNo);
 
         errorMsg.classList.add('hidden');

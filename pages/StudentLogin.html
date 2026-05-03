@@ -6,44 +6,43 @@
     <title>QCU - Student Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-300 flex items-center justify-center min-h-screen font-sans">
+<body class="bg-gray-300 flex items-center justify-center min-h-screen font-sans p-4">
 
-    <div class="bg-white rounded-[2.5rem] shadow-2xl p-10 w-full max-w-md text-center mx-4 transition-all">
+    <div class="bg-white rounded-[2rem] shadow-xl p-6 w-full max-w-[350px] text-center transition-all">
         
-        <h1 class="text-4xl font-bold text-[#4f46e5] mb-6 tracking-tight uppercase">
+        <h1 class="text-2xl font-bold text-[#4f46e5] mb-4 tracking-tight uppercase">
             WELCOME
         </h1>
 
-        <div class="flex justify-center mb-6">
-            <div class="w-48 h-48 rounded-full bg-[#fdf2e9] overflow-hidden flex items-center justify-center">
+        <div class="flex justify-center mb-4">
+            <div class="w-32 h-32 rounded-full bg-[#fdf2e9] overflow-hidden flex items-center justify-center">
                 <img src="../images/avatar.png" alt="Avatar" class="w-full h-full object-cover" />
             </div>
         </div>
 
-        <h2 class="text-3xl font-bold text-[#4f46e5] mb-6">
+        <h2 class="text-lg font-bold text-[#4f46e5] mb-4">
             Hello, Student!
         </h2>
 
-        <div class="mb-6">
+        <div class="mb-4">
             <input 
                 type="text" 
                 id="studentNumber" 
                 placeholder="Student Number" 
-                class="w-full bg-gray-200 border-2 border-gray-400 rounded-xl py-3 px-4 text-center text-gray-700 placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition-all"
+                class="w-64 mx-auto bg-gray-100 border border-gray-300 rounded-lg py-2 px-4 text-center text-sm focus:outline-none focus:border-indigo-500 transition-all"
             >
         </div>
 
-        <button id="submitLogin" class="w-1/2 bg-[#4f46e5] hover:bg-[#3f38c2] text-white text-xl font-bold py-3 rounded-2xl shadow-lg transform active:scale-95 transition-all">
+        <button id="submitLogin" class="w-64 mx-auto bg-[#4f46e5] hover:bg-[#3f38c2] text-white font-bold py-2 rounded-xl shadow-md transition-all text-sm">
             Log in
         </button>
 
-        <p id="errorMessage" class="text-red-500 text-sm mt-4 hidden">Please enter a valid student number.</p>
+        <p id="errorMessage" class="text-red-500 text-[10px] mt-3 hidden">Please enter a valid student number.</p>
         
         <button onclick="window.location.href='Login.html'" 
-            class="block mx-auto mt-4 text-sm text-gray-400 hover:text-indigo-600 transition-colors">
+            class="block mx-auto mt-4 text-[12px] text-gray-400 hover:text-indigo-600 transition-colors">
             ← Go Back
         </button>
-    
     </div>
 
     <script src="../scripts/SL.js"></script>
